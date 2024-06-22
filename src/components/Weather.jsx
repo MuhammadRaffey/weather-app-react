@@ -26,7 +26,7 @@ const Weather = () => {
     "09d": drizzle,
     "09n": drizzle,
   };
-  const API_KEY = "677eae3328bf82544874631c4caa49cc";
+  const API_KEY = "";
 
   const fetchWeatherData = async () => {
     try {
