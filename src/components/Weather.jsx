@@ -11,9 +11,10 @@ import snow from "../assets/snow.png";
 
 const Weather = () => {
   const [inputCity, setInputCity] = useState("Lahore");
-  const [city, setCity] = useState("Lahore");
+  const [city, setCity] = useState("Karachi");
   const [weatherData, setWeatherData] = useState(null);
   const [error, setError] = useState("");
+  const [imgSrc, setImgSrc] = useState(cloud);
   const allIcons = {
     "01d": clear,
     "01n": clear,
@@ -26,14 +27,17 @@ const Weather = () => {
     "09d": drizzle,
     "09n": drizzle,
   };
-  const API_KEY = "";
+  const API_KEY = "677eae3328bf82544874631c4caa49cc";
 
   const fetchWeatherData = async () => {
     try {
       const response = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
       );
-      setWeatherData(response.data);
+      const data = response.data;
+      console.log(data);
+      setWeatherData(data);
+      setImgSrc(allIcons[data.weather[0].icon] || cloud);
 
       setError("");
     } catch (error) {
@@ -65,17 +69,30 @@ const Weather = () => {
           value={inputCity}
           className="h-[50px] border-none outline-none rounded-3xl text-zinc-800 pl-[25px] font-[18px]"
         />
-        <button type="submit" className="cursor-pointer bg-white text-black flex items-center justify-center h-[51px] w-[51px] rounded-full p-3">
+        <button
+          type="submit"
+          className="cursor-pointer bg-white text-black flex items-center justify-center h-[51px] w-[51px] rounded-full p-3"
+        >
           <FiSearch className="text-black scale-[1.5] hover:scale-[1.75] transition-all duration-300" />
         </button>
       </form>
       {error && <p className="text-red-500 mt-4">{error}</p>}
       {weatherData && (
         <>
-          <img src={cloud} className="w-[150px] mb-[15px] mt-[30px] mx-0" alt="" />
-          <p className="text-[60px] text-white leading-none">{weatherData.main.temp}°C</p>
-          <p className="text-[30px] text-white">Feels Like: {weatherData.main.feels_like}°C</p>
-          <p className="text-[35px] text-white">{weatherData.weather[0].description}</p>
+          <img
+            src={imgSrc}
+            className="w-[150px] mb-[15px] mt-[30px] mx-0"
+            alt=""
+          />
+          <p className="text-[60px] text-white leading-none">
+            {weatherData.main.temp}°C
+          </p>
+          <p className="text-[30px] text-white">
+            Feels Like: {weatherData.main.feels_like}°C
+          </p>
+          <p className="text-[35px] text-white">
+            {weatherData.weather[0].description}
+          </p>
           <p className="text-[22px] text-white">{weatherData.name}</p>
           <div className="text-white w-[100%] mt-[42px] flex justify-between">
             <div className="flex items-start gap-[12px] font-[22px]">
@@ -86,7 +103,11 @@ const Weather = () => {
               </div>
             </div>
             <div className="flex gap-3">
-              <img src={wind} alt="" className="top-0 w-[45px] h-10 mt-[10px]" />
+              <img
+                src={wind}
+                alt=""
+                className="top-0 w-[45px] h-10 mt-[10px]"
+              />
               <div className="flex-col grid mt-1">
                 <p>{weatherData.wind.speed} Km/h</p>
                 <span className="block text-[16px]">Wind Speed</span>
